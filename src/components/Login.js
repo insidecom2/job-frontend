@@ -1,29 +1,53 @@
-import { Form , Button} from 'react-bootstrap';
- 
-function Login() {
-    return (
-        <Form>
-            <h3>Login</h3>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-                <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                </Form.Text>
-            </Form.Group>
+import { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import axios from "axios";
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
-        </Form>
-    )
+function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+
+  const handleUpdate = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post(`/api/login`, form).then((res) => {
+      console.log(res);
+    });
+  };
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <h3>Login</h3>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control
+          name="email"
+          type="email"
+          placeholder="Enter email"
+          onChange={handleUpdate}
+        />
+        <Form.Text className="text-muted">{form.email}</Form.Text>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleUpdate}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check type="checkbox" label="Check me out" />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
+  );
 }
 
 export default Login;
